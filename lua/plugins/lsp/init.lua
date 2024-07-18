@@ -44,7 +44,7 @@ return {
                 -- pyright = {},
                 -- vimls = {},
                 jdtls = require("plugins.lsp.jdtls"),
-                yamlls = {},
+                -- yamlls = {},
                 tsserver = {},
                 lua_ls = require("plugins.lsp.lua_ls"),
                 svelte = {},

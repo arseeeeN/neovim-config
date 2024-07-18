@@ -35,9 +35,9 @@ mk.nmap("<leader>Db", ":DapToggleBreakpoint<CR>", "Toggle a breakpoint on the cu
 mk.nmap("<leader>Dc", ":DapContinue<CR>", "Continue the current debugging session or start a new one")
 mk.nmap("<leader>Dt", ":DapTerminate<CR>", "Terminate the current debugging session")
 
--- rest.nvim
-mk.nmap("<leader>rr", ":Rest run<CR>", "Run request under the cursor")
-mk.nmap("<leader>rl", ":Rest last<CR>", "Re-run latest request")
+-- -- rest.nvim
+-- mk.nmap("<leader>rr", ":Rest run<CR>", "Run request under the cursor")
+-- mk.nmap("<leader>rl", ":Rest last<CR>", "Re-run latest request")
 
 -- Telescope
 local builtin = require("telescope.builtin")
@@ -70,4 +70,4 @@ mk.nmap("<leader>hbfe", function()
         select_buffer = "true",
     })
 end, "Open file explorer at buffer file location including hidden and ignored files using Telescope")
-mk.nmap("<leader>re", extensions.rest.select_env, "Select environment for rest.nvim requests using Telescope")
+-- mk.nmap("<leader>re", extensions.rest.select_env, "Select environment for rest.nvim requests using Telescope")
