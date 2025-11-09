@@ -16,11 +16,9 @@ return {
             {
                 "hrsh7th/nvim-cmp",
                 dependencies = {
-                    "L3MON4D3/LuaSnip",
                     "hrsh7th/cmp-nvim-lsp",
                     "hrsh7th/cmp-path",
                     "hrsh7th/cmp-buffer",
-                    "saadparwaiz1/cmp_luasnip",
                 },
             },
         },
@@ -131,17 +129,9 @@ return {
                 automatic_installation = true,
             })
 
-            -- luasnip setup
-            local luasnip = require("luasnip")
-
             -- nvim-cmp setup
             local cmp = require("cmp")
             cmp.setup({
-                snippet = {
-                    expand = function(args)
-                        luasnip.lsp_expand(args.body)
-                    end,
-                },
                 mapping = cmp.mapping.preset.insert({
                     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -153,8 +143,6 @@ return {
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif luasnip.expand_or_jumpable() then
-                            luasnip.expand_or_jump()
                         else
                             fallback()
                         end
@@ -162,8 +150,6 @@ return {
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif luasnip.jumpable(-1) then
-                            luasnip.jump(-1)
                         else
                             fallback()
                         end
@@ -172,9 +158,6 @@ return {
                 sources = {
                     {
                         name = "nvim_lsp",
-                    },
-                    {
-                        name = "luasnip",
                     },
                     {
                         name = "path",
@@ -199,44 +182,68 @@ return {
     },
     -- Use Neovim as a language server to inject LSP diagnostics,
     -- code actions, and more via Lua.
-    {
-        "jose-elias-alvarez/null-ls.nvim",
-        dependencies = { "mason-org/mason.nvim", "nvim-lua/plenary.nvim" },
-        lazy = false,
-        -- config = function()
-        -- local null_ls = require("null-ls")
-        -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/formatting
-        -- local formatting = null_ls.builtins.formatting
-        -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
-        -- local diagnostics = null_ls.builtins.diagnostics
+    -- {
+    --     "nvimtools/none-ls.nvim",
+    --     dependencies = { "mason-org/mason.nvim", "nvim-lua/plenary.nvim" },
+    --     lazy = false,
+    --     config = function()
+    --         local null_ls = require("null-ls")
+    --         local formatting = null_ls.builtins.formatting
+    --         local diagnostics = null_ls.builtins.diagnostics
 
-        -- null_ls.setup({
-        --     debug = false,
-        --     sources = {
-        --         formatting.prettier.with({
-        --             disabled_filetypes = { "yaml" },
-        --             extra_filetypes = { "toml" },
-        --             extra_args = {
-        --                 "--tab-width",
-        --                 "4",
-        --                 "--indent_size",
-        --                 "4",
-        --             },
-        --         }),
-        --         formatting.black.with({
-        --             extra_args = { "--fast" },
-        --         }),
-        --         formatting.stylua,
-        --         formatting.google_java_format,
-        --         diagnostics.flake8,
-        --     },
-        -- })
-        -- end,
-    },
+    --         null_ls.setup({
+    --             debug = false,
+    --             sources = {
+    --                 formatting.prettier.with({
+    --                     disabled_filetypes = { "yaml" },
+    --                     extra_filetypes = { "toml" },
+    --                     extra_args = {
+    --                         "--tab-width",
+    --                         "4",
+    --                         "--indent_size",
+    --                         "4",
+    --                     },
+    --                 }),
+    --                 formatting.black.with({
+    --                     extra_args = { "--fast" },
+    --                 }),
+    --                 formatting.stylua,
+    --                 formatting.google_java_format,
+    --                 diagnostics.flake8,
+    --             },
+    --         })
+    --     end,
+    -- },
+    -- {
+    --     "pmizio/typescript-tools.nvim",
+    --     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    --     opts = {},
+    -- },
     {
-        "pmizio/typescript-tools.nvim",
-        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-        opts = {},
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        opts = {
+            -- Define your formatters
+            formatters_by_ft = {
+                lua = { "stylua" },
+                python = { "isort", "black" },
+                javascript = { "prettierd", "prettier", stop_after_first = true },
+                javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+                typescript = { "prettierd", "prettier", stop_after_first = true },
+                typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+            },
+            -- Set default options
+            default_format_opts = {
+                lsp_format = "fallback",
+            },
+            -- Set up format-on-save
+            format_on_save = { timeout_ms = 500 },
+        },
+        init = function()
+            -- If you want the formatexpr, here is the place to set it
+            vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+        end,
     },
     {
         "mrcjkb/rustaceanvim",
